@@ -19,8 +19,12 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
+      - name: Download Gradle Wrapper JAR
+        working-directory: ClientApp
+        run: |
+          mkdir -p gradle/wrapper
+          curl -L -o gradle/wrapper/gradle-wrapper.jar \
+            "https://github.com/gradle/gradle/raw/v8.7.0/gradle/wrapper/gradle-wrapper.jar"
 
       - name: Grant execute permission
         working-directory: ClientApp
@@ -28,7 +32,7 @@ jobs:
 
       - name: Build ClientApp debug APK
         working-directory: ClientApp
-        run: ./gradlew assembleDebug --no-daemon
+        run: ./gradlew assembleDebug --no-daemon --stacktrace
 
       - name: Upload ClientApp APK
         uses: actions/upload-artifact@v4
@@ -48,8 +52,12 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
+      - name: Download Gradle Wrapper JAR
+        working-directory: AdminApp
+        run: |
+          mkdir -p gradle/wrapper
+          curl -L -o gradle/wrapper/gradle-wrapper.jar \
+            "https://github.com/gradle/gradle/raw/v8.7.0/gradle/wrapper/gradle-wrapper.jar"
 
       - name: Grant execute permission
         working-directory: AdminApp
@@ -57,7 +65,7 @@ jobs:
 
       - name: Build AdminApp debug APK
         working-directory: AdminApp
-        run: ./gradlew assembleDebug --no-daemon
+        run: ./gradlew assembleDebug --no-daemon --stacktrace
 
       - name: Upload AdminApp APK
         uses: actions/upload-artifact@v4
