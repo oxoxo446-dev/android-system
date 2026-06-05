@@ -1,0 +1,1 @@
+-keep class com.example.adminapp.database.entity.** { *; }
