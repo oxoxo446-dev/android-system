@@ -1,0 +1,66 @@
+name: Build Android APKs
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-clientapp:
+    name: Build ClientApp
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Grant execute permission
+        working-directory: ClientApp
+        run: chmod +x gradlew
+
+      - name: Build ClientApp debug APK
+        working-directory: ClientApp
+        run: ./gradlew assembleDebug --no-daemon
+
+      - name: Upload ClientApp APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: clientapp-debug
+          path: ClientApp/app/build/outputs/apk/debug/app-debug.apk
+
+  build-adminapp:
+    name: Build AdminApp
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Grant execute permission
+        working-directory: AdminApp
+        run: chmod +x gradlew
+
+      - name: Build AdminApp debug APK
+        working-directory: AdminApp
+        run: ./gradlew assembleDebug --no-daemon
+
+      - name: Upload AdminApp APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: adminapp-debug
+          path: AdminApp/app/build/outputs/apk/debug/app-debug.apk
